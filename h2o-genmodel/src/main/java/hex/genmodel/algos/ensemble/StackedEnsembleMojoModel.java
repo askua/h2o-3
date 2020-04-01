@@ -1,6 +1,7 @@
 package hex.genmodel.algos.ensemble;
 
 import hex.genmodel.MojoModel;
+import hex.genmodel.algos.glm.GlmMojoModel;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public class StackedEnsembleMojoModel extends MojoModel {
             int k = 0;
             basePreds = new double[_baseModelNum * _nclasses]; //Proper allocation for multinomial ensemble (class probabilities per base model)
             for(int i = 0; i < _baseModelNum; ++i){
+                if (_baseModels[i] == null) continue; // skip unused model
                 for(int j = 0; j < _nclasses; ++j){
                     basePreds[k] = _baseModels[i]._mojoModel.score0(_baseModels[i].remapRow(row), basePredsRow)[j + 1];
                     k++;
@@ -30,11 +32,13 @@ public class StackedEnsembleMojoModel extends MojoModel {
             }
         }else if(_nclasses == 2){ //Binomial
             for(int i = 0; i < _baseModelNum; ++i) {
+                if (_baseModels[i] == null) continue; // skip unused model
                 _baseModels[i]._mojoModel.score0(_baseModels[i].remapRow(row), basePredsRow);
                 basePreds[i] = basePredsRow[2];
             }
         }else{ //Regression
             for(int i = 0; i < _baseModelNum; ++i) { //Regression
+                if (_baseModels[i] == null) continue; // skip unused model
                 _baseModels[i]._mojoModel.score0(_baseModels[i].remapRow(row), basePredsRow);
                 basePreds[i] = basePredsRow[0];
             }
