@@ -39,9 +39,9 @@ h2o.segment_train <- function(algorithm,
                               parallelism = 1,
                               ...)
 {
-  segment_train_fun_name <- sprintf("h2o.bulk_%s", algorithm)
+  segment_train_fun_name <- sprintf(".h2o.bulk_%s", algorithm)
   if (!exists(segment_train_fun_name)) {
-    stop(sprintf("Algorithm %s is not recognized, please check the spelling. For the name to be valid function h2o.%s needs to exist as well).", algorithm, algorithm))
+    stop(sprintf("Algorithm %s is not recognized, please check the spelling. For the name to be valid, a function h2o.%s needs to exist as well).", algorithm, algorithm))
   }
     
   params <- list(...)
